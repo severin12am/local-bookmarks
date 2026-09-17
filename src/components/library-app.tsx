@@ -23,8 +23,8 @@ import type {
 import { BookmarkCard } from "@/components/bookmark-card";
 import { BulkActions } from "@/components/bulk-actions";
 import { EditBookmarkDialog } from "@/components/edit-bookmark-dialog";
-import { ImportDialog } from "@/components/import-dialog";
-import { SyncDialog } from "@/components/sync-dialog";
+import { ConnectDialog } from "@/components/connect-dialog";
+import { GettingStarted } from "@/components/getting-started";
 import { Sidebar, type SidebarFilters } from "@/components/sidebar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -189,6 +189,26 @@ export function LibraryApp() {
     await loadPage(1, false);
   }
 
+  const reloadAllRef = useRef(reloadAll);
+  reloadAllRef.current = reloadAll;
+
+  useEffect(() => {
+    const id = window.setInterval(async () => {
+      try {
+        const status = await api.telegramStatus();
+        if (!status.connected) return;
+        const res = await api.telegramPull();
+        if (res.imported > 0) {
+          toast.success(`Telegram: ${res.imported} new`);
+          await reloadAllRef.current();
+        }
+      } catch {
+        // not connected
+      }
+    }, 4000);
+    return () => window.clearInterval(id);
+  }, []);
+
   async function selectAllMatching() {
     setSelectingAll(true);
     try {
@@ -327,8 +347,7 @@ export function LibraryApp() {
                 )}
                 Categorize
               </Button>
-              <SyncDialog onSynced={() => void reloadAll()} />
-              <ImportDialog onImported={() => void reloadAll()} />
+              <ConnectDialog onChanged={() => void reloadAll()} />
               <Button size="sm" variant="secondary" asChild>
                 <a href="/api/export" download>
                   <Download className="h-4 w-4" />
@@ -458,18 +477,18 @@ export function LibraryApp() {
                 <Loader2 className="h-5 w-5 animate-spin" />
                 Loading library…
               </div>
+            ) : stats?.totalBookmarks === 0 ? (
+              <GettingStarted onChanged={() => void reloadAll()} />
             ) : items.length === 0 ? (
               <div className="rounded-xl border border-dashed border-zinc-800 px-6 py-16 text-center">
                 <h2 className="text-lg font-medium text-zinc-100">
-                  No bookmarks yet
+                  No bookmarks match
                 </h2>
                 <p className="mt-2 text-sm text-zinc-500">
-                  Sync from X, or import Telegram Saved Messages and Instagram
-                  reel links. Everything stays on this machine.
+                  Clear filters or search, or connect another source.
                 </p>
                 <div className="mt-6 flex justify-center gap-2">
-                  <SyncDialog onSynced={() => void reloadAll()} />
-                  <ImportDialog onImported={() => void reloadAll()} />
+                  <ConnectDialog onChanged={() => void reloadAll()} />
                 </div>
               </div>
             ) : (

@@ -1,7 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  serverExternalPackages: ["better-sqlite3", "@hardbrick21/x-txid-generator"],
+  serverExternalPackages: [
+    "better-sqlite3",
+    "@hardbrick21/x-txid-generator",
+    "teleproto",
+  ],
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "pbs.twimg.com" },

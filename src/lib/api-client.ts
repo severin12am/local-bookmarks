@@ -96,6 +96,104 @@ export const api = {
     );
   },
 
+  telegramStatus: () =>
+    fetch("/api/telegram").then((r) =>
+      json<{
+        connected: boolean;
+        mode: "user" | "bot" | null;
+        username: string | null;
+        firstName: string | null;
+        savedAt: string | null;
+        pending: "code" | "password" | null;
+        codeViaApp?: boolean;
+        passwordHint?: string | null;
+        hasApi?: boolean;
+      }>(r)
+    ),
+
+  telegramConnect: (token: string) =>
+    fetch("/api/telegram", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token }),
+    }).then((r) =>
+      json<{
+        connected: boolean;
+        mode: "user" | "bot" | null;
+        username: string | null;
+        savedAt: string | null;
+      }>(r)
+    ),
+
+  telegramStartLogin: (body: {
+    phone: string;
+    apiId?: string;
+    apiHash?: string;
+  }) =>
+    fetch("/api/telegram", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    }).then((r) =>
+      json<{
+        connected: boolean;
+        pending: "code" | "password" | null;
+        codeViaApp?: boolean;
+        passwordHint?: string | null;
+        hasApi?: boolean;
+      }>(r)
+    ),
+
+  telegramSubmitCode: (code: string) =>
+    fetch("/api/telegram", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code }),
+    }).then((r) =>
+      json<
+        ImportResult & {
+          connected: boolean;
+          pending: "code" | "password" | null;
+          passwordHint?: string | null;
+          username?: string | null;
+          found?: number;
+          updateCount?: number;
+          error?: string;
+        }
+      >(r)
+    ),
+
+  telegramSubmitPassword: (password: string) =>
+    fetch("/api/telegram", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ password }),
+    }).then((r) =>
+      json<
+        ImportResult & {
+          connected: boolean;
+          username?: string | null;
+          found?: number;
+          updateCount?: number;
+          error?: string;
+        }
+      >(r)
+    ),
+
+  telegramPull: () =>
+    fetch("/api/telegram", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ pull: true }),
+    }).then((r) =>
+      json<ImportResult & { found?: number; updateCount?: number }>(r)
+    ),
+
+  telegramDisconnect: () =>
+    fetch("/api/telegram", { method: "DELETE" }).then((r) =>
+      json<{ ok: boolean }>(r)
+    ),
+
   syncStatus: () =>
     fetch("/api/sync/x").then((r) =>
       json<{ connected: boolean; savedAt: string | null }>(r)

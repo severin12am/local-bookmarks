@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Local Bookmarks — Connect X",
+  "version": "0.1.0",
+  "description": "Send your X session to the local Bookmarks app and sync bookmarks.",
+  "permissions": ["cookies"],
+  "host_permissions": [
+    "https://x.com/*",
+    "https://twitter.com/*",
+    "http://127.0.0.1/*",
+    "http://localhost/*"
+  ],
+  "action": {
+    "default_title": "Sync X bookmarks",
+    "default_popup": "popup.html"
+  }
+}

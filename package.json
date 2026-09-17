@@ -13,6 +13,7 @@
   },
   "scripts": {
     "dev": "next dev",
+    "dev:open": "node scripts/open-dev.mjs",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -45,6 +46,7 @@
     "react-dom": "19.2.8",
     "sonner": "^2.0.7",
     "tailwind-merge": "^3.6.0",
+    "teleproto": "^1.229.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {

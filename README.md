@@ -1,93 +1,71 @@
 # Local Bookmarks
 
-A **local** library for things that never become a Chrome bookmark:
+Local library for **X bookmarks**, **Telegram Saved Messages**, and **Instagram reels**. No cloud account. MIT.
 
-- **X (Twitter) bookmarks** — sync the native bookmark list
-- **Telegram Saved Messages** — official Desktop JSON/HTML export
-- **Instagram reels** — paste links, or an SMS / Google Messages backup
-
-No account, no cloud, no paid API. SQLite on your machine. MIT licensed.
-
-This is not Raindrop, linkding, or a browser-bookmark manager. Those tools are better if you save tabs from an extension. Use this when the save lives inside X, Instagram, or Telegram.
+Clone, start, click **Connect**. Everything stays on your computer.
 
 ## Setup
 
-Needs [Node.js 20+](https://nodejs.org/).
+1. Install [Node.js 20+](https://nodejs.org/) (LTS) if you do not have it.
+2. Clone this repo, then start it:
 
 ```bash
 git clone https://github.com/severin12am/local-bookmarks.git
 cd local-bookmarks
-npm install
-npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000). The database is created at `data/bookmarks.db` (gitignored).
+- **Windows:** double-click `start.bat`
+- **Mac / Linux:** `chmod +x start.sh && ./start.sh`
 
-That is the whole setup.
+The first run installs packages, starts the app, and opens your browser. That is the whole setup.
 
-## Add bookmarks
+If nothing opens: `npm install` then `npm run dev`, and visit [http://localhost:3000](http://localhost:3000) (or **3001** if 3000 is taken).
 
-### X (live sync)
+## Connect sources
 
-Unofficial: the app uses your logged-in browser session, not the X developer API. Sessions expire; paste new cookies when sync fails. Not affiliated with X.
+Click **Connect** in the app header.
 
-1. Click **Sync from X**
-2. On [x.com](https://x.com) while logged in: DevTools → Application → Cookies → `https://x.com`
-3. Copy `auth_token` and `ct0`, paste, Sync
+### X
 
-Cookies stay in local `data/x-credentials.json` (gitignored). Re-sync anytime; duplicates are skipped.
+1. Stay logged into [x.com](https://x.com) in Chrome or Edge.
+2. Open `chrome://extensions` (Edge: `edge://extensions`).
+3. Turn on **Developer mode**.
+4. **Load unpacked** → choose the `extension` folder in this project.
+5. Click the extension → **Sync X bookmarks**.
 
-### Telegram Saved Messages
+The session is stored in local `data/` only. If the extension is blocked: Connect → X → paste cookies (Cookie-Editor JSON, a Cookie header, or `auth_token` and `ct0` on two lines).
 
-Official Desktop export — the app does not log into Telegram.
+If sync times out, turn on a VPN and try again.
 
-1. Telegram Desktop → **Settings → Advanced → Export Telegram data**
-2. Format: **JSON**
-3. Uncheck everything except **Saved Messages** (or export only that chat)
-4. Click **Import** and drop `result.json`  
-   If you exported the whole account, use the chat file: `chats/chat_XXX/result.json`, not the root index.
+### Telegram
 
-HTML export (`messages.html`) also works. Public `t.me/...` links can be pasted.
+You do **not** forward Saved Messages one by one.
 
-### Instagram reels
+1. Connect → Telegram → phone number in international format (`+15551234567`).
+2. One-time: open [my.telegram.org](https://my.telegram.org) → log in → **API development tools** → create an app → paste `api_id` and `api_hash`.
+3. Enter the login code Telegram sends (and the two-step password if you use one).
 
-The app does not log into Instagram. Typical save flow: send the reel to your 2nd account, or share it into Google Messages.
+The app then reads **Saved Messages** while it is running. Telegram lists this device as **Local Bookmarks** (Settings → Devices). Disconnect in the app to sign it out.
 
-1. Click **Import**
-2. Paste `instagram.com/reel/…` links, **or**
-3. Android: SMS Backup & Restore → export the Messages thread that has the links → drop the XML
+The first sync takes the latest ~200 saved items. For full history: Telegram Desktop → Settings → Advanced → Export Telegram data → JSON → Saved Messages → drop `result.json` on the same tab.
 
-Reel-only Telegram saves are stored under **Instagram**; notes and forwarded posts stay under **Telegram**.
+Optional bot fallback (forward selected chats only): `@BotFather` → `/newbot` → paste the token under **Bot fallback**.
 
-### X JSON (optional)
+### Instagram
 
-If you already have a bookmarks JSON dump, drop it on **Import**. Prefer Sync from X. A tiny fake dump is in `sample-bookmarks.json`.
+Paste `instagram.com/reel/…` links, or drop an SMS backup of the Google Messages thread you send reels to.
 
-## Features
+## If something is stuck
 
-- Search across text, authors, and notes
-- Tags, collections, personal notes
-- Favorite / read-unread
-- Filters: tags, collections, favorites, unread, media, author
-- Auto-categorize (edit rules in `src/lib/categorize.ts`)
-- Bulk select: tag, move, star, mark read, delete
-- Export library back to JSON
-- Keyboard: `/` focus search, `Esc` clear selection
-
-## Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start dev server |
-| `npm run build` | Production build |
-| `npm run start` | Start production server |
-| `npm run db:studio` | Open Drizzle Studio |
+- **Loading library… forever:** close the terminal and run `start.bat` / `start.sh` again.
+- **Wrong port:** the start script uses 3000, then 3001–3003 if busy.
+- **Telegram code expired:** click **Send code** again.
+- **X session expired:** sync from the extension while you are logged into x.com.
 
 ## Privacy
 
-- Designed for local use (`better-sqlite3` is a native Node module).
-- Do not commit `data/` or `exports/` — they can contain your library and X session cookies.
-- Instagram previews use public Open Graph pages; some reels import as URL-only if Meta blocks the fetch.
+- SQLite, X cookies, and the Telegram session live in gitignored `data/`. Do not commit that folder.
+- X sync uses your browser session (unofficial; sessions expire). Telegram user login uses [MTProto](https://core.telegram.org/mtproto) (unofficial client). Not affiliated with X, Telegram, or Meta.
 
 ## License
 
