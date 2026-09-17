@@ -1,0 +1,48 @@
+{
+  "bookmarks": [
+    {
+      "id": "1234567890123456789",
+      "text": "Just shipped a local-first bookmarks app with Next.js + SQLite. Fast search, tags, collections — no cloud required.",
+      "author": {
+        "name": "Ada Lovelace",
+        "username": "ada",
+        "profile_image_url_https": "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png"
+      },
+      "created_at": "2026-07-20T14:22:00.000Z",
+      "url": "https://x.com/ada/status/1234567890123456789",
+      "media": [
+        {
+          "type": "photo",
+          "url": "https://pbs.twimg.com/media/example.jpg"
+        }
+      ],
+      "like_count": 420,
+      "retweet_count": 42,
+      "reply_count": 18,
+      "quote_count": 7,
+      "tags": ["devtools", "sqlite"]
+    },
+    {
+      "tweet_id": "9876543210987654321",
+      "full_text": "Tip: use FTS5 for instant full-text search over tweet text and authors. It feels like magic.",
+      "user": {
+        "name": "Grace Hopper",
+        "screen_name": "ghopper",
+        "profile_image_url": "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png"
+      },
+      "created_at": "2026-06-02T09:10:00.000Z",
+      "favorite_count": 1200,
+      "retweet_count": 300,
+      "collection": "Reading list"
+    },
+    {
+      "id_str": "1111222233334444555",
+      "text": "Keyboard shortcut of the day: press / to focus search in your bookmark library.",
+      "author_name": "Lin Torvalds",
+      "author_username": "linus",
+      "created_at": "2026-05-11T18:45:00.000Z",
+      "likeCount": 88,
+      "repostCount": 12
+    }
+  ]
+}
